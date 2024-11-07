@@ -1,0 +1,19 @@
+name: Distribute Play Store
+
+on:
+  workflow_dispatch:
+
+jobs:
+  upload_playstore:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/actions/setup
+
+      - name: Build
+        run: ./gradlew :app:assembleDebug
+
+      - uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ""
+          packageName: com.example.MyApp
+          releaseFiles: app/build/outputs/apk/debug/app-debug.apk

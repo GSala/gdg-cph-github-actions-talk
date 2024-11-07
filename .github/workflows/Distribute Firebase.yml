@@ -1,0 +1,29 @@
+name: Distribute Firebase App Distribution
+
+on:
+  workflow_dispatch:
+    inputs:
+      releaseNotes:
+        description: "Release notes"
+        required: false
+        type: string
+  push:
+    branches:
+      - main
+
+jobs:
+  upload_firebase:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/actions/setup
+
+      - name: Build
+        run: ./gradlew :app:assembleDebug
+
+      - name: Upload APK to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ""
+          serviceCredentialsFileContent: ""
+          groups: testers
+          file: app/build/outputs/apk/debug/app-debug.apk
